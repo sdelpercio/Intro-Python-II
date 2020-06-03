@@ -1,5 +1,5 @@
 from room import Room
-
+from player import Player
 # Declare all the rooms
 
 room = {
@@ -37,7 +37,57 @@ room['treasure'].s_to = room['narrow']
 # Main
 #
 
-# Make a new player object that is currently in the 'outside' room.
+# Make a new player object that is currently in the 'outside' room, declare vars
+new_player = Player(room['outside'])
+blocked = "Doesn't appear you can move that way..."
+
+# Initialize Game
+print("Welcome to the Room Game. It's totally fun...")
+print("You are a poor thief searching for gold, find the treasure to win the game!")
+print('')
+print(
+    "Controls: [n] move up [e] move right [s] move down [w] move left [q] quit game")
+print('')
+
+while True:
+    print('')
+    print(new_player.room)
+
+    action = input("What do you want to do?")
+
+    if action == 'q':
+        print('Thanks for playing.')
+        break
+
+    if action == 'n':
+        if new_player.room.n_to:
+            new_player.room = new_player.room.n_to
+            continue
+        else:
+            print(blocked)
+            continue
+    if action == 'e':
+        if new_player.room.e_to:
+            new_player.room = new_player.room.e_to
+            continue
+        else:
+            print(blocked)
+            continue
+    if action == 's':
+        if new_player.room.s_to:
+            new_player.room = new_player.room.s_to
+            continue
+        else:
+            print(blocked)
+            continue
+    if action == 'w':
+        if new_player.room.w_to:
+            new_player.room = new_player.room.w_to
+            continue
+        else:
+            print(blocked)
+            continue
+
 
 # Write a loop that:
 #
