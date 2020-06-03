@@ -39,54 +39,64 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room, declare vars
 new_player = Player(room['outside'])
-blocked = "Doesn't appear you can move that way..."
+blocked = "> Doesn't appear you can move that way..."
 
 # Initialize Game
-print("Welcome to the Room Game. It's totally fun...")
-print("You are a poor thief searching for gold, find the treasure to win the game!")
+print("> Welcome to the Room Game. It's totally fun...")
+print("> You are a poor thief searching for gold, find the treasure to win the game!")
 print('')
 print(
-    "Controls: [n] move up [e] move right [s] move down [w] move left [q] quit game")
+    "> Controls: [n] move north [e] move east [s] move south [w] move west [q] quit game")
 print('')
 
+# create loop
 while True:
+    # opening statement
     print('')
     print(new_player.room)
-
+    print('')
     action = input("What do you want to do?")
 
+    # quit game
     if action == 'q':
-        print('Thanks for playing.')
+        print('> Thanks for playing.')
         break
 
-    if action == 'n':
-        if new_player.room.n_to:
-            new_player.room = new_player.room.n_to
-            continue
-        else:
+    # movement actions
+    elif action == 'n':
+        try:
+            if new_player.room.n_to:
+                new_player.room = new_player.room.n_to
+                continue
+        except AttributeError:
             print(blocked)
             continue
-    if action == 'e':
-        if new_player.room.e_to:
-            new_player.room = new_player.room.e_to
-            continue
-        else:
+    elif action == 'e':
+        try:
+            if new_player.room.e_to:
+                new_player.room = new_player.room.e_to
+                continue
+        except AttributeError:
             print(blocked)
             continue
-    if action == 's':
-        if new_player.room.s_to:
-            new_player.room = new_player.room.s_to
-            continue
-        else:
+    elif action == 's':
+        try:
+            if new_player.room.s_to:
+                new_player.room = new_player.room.s_to
+                continue
+        except AttributeError:
             print(blocked)
             continue
-    if action == 'w':
-        if new_player.room.w_to:
-            new_player.room = new_player.room.w_to
-            continue
-        else:
+    elif action == 'w':
+        try:
+            if new_player.room.w_to:
+                new_player.room = new_player.room.w_to
+                continue
+        except AttributeError:
             print(blocked)
             continue
+    else:
+        print('> Action not recognized. Try again.')
 
 
 # Write a loop that:
