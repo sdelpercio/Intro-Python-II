@@ -1,6 +1,9 @@
+# import files
 from room import Room
 from player import Player
 from item import Item
+#import modules
+import time
 
 # Declare all the rooms
 room = {
@@ -33,20 +36,20 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 # create items
-rusty_sword = Item(
-    "Rusty sword", "rough to the touch, a relic from past eras.")
-mirror = Item("Mirror", "your face reflects as you stare into it.")
-silver_dagger = Item(
-    "Silver dagger", "useful against those without a reflection...")
-rubber_chicken = Item("Rubber chicken", "SQAWWW")
-gold_coin = Item("Gold coin", "from a previous time. Should be worth a lot!")
+
+sword = Item("sword", "rusty and rough to the touch, a relic from past eras.")
+mirror = Item("mirror", "your face reflects as you stare into it.")
+dagger = Item("dagger", "useful against those without a reflection...")
+chicken = Item("chicken", "SQAWWW")
+coin = Item("coin", "from a previous time. Should be worth a lot!")
+
 
 # Add items to rooms
-room['outside'].items.append(rusty_sword)
-room['foyer'].items.append(rubber_chicken)
+room['outside'].items.append(sword)
+room['foyer'].items.append(chicken)
 room['foyer'].items.append(mirror)
-room['overlook'].items.append(silver_dagger)
-room['treasure'].items.append(gold_coin)
+room['overlook'].items.append(dagger)
+room['treasure'].items.append(coin)
 
 
 #
@@ -72,32 +75,59 @@ while True:
     print('')
     print(new_player.current_room)
     print('')
-    action = input("What do you want to do?")
+
+    # check for boss battle
+    if new_player.current_room.name == "Treasure Chamber":
+        print("> Suddenly a Vampire descends from the ceiling!!")
+        print("> You have 15 seconds to decide before certain DOOM!")
+        now = time.time()
+        future = now + 15
+
+    action = input("What do you want to do?  ").split()
+
+    # time check for boss battle
+    if new_player.current_room.name == "Treasure Chamber":
+        if time.time() > future:
+            print("> The Vampire sucks your bLoOoOoD")
+            print("> You Died.")
+            break
 
     # quit game
-    if action == 'q':
+    if action[0] == 'q':
         print('> Thanks for playing.')
         break
 
     # movement actions
-    elif action in ['n', 'e', 's', 'w']:
-        new_player.move(action)
+    elif action[0] in ['n', 'e', 's', 'w']:
+        print('')
+        new_player.move(action[0])
         continue
 
-    elif len(action) == 2:
+    elif action[0] in ['look', 'search', 'find']:
+        print('')
+        new_player.look_for_items()
+        continue
+
+    elif len(action) > 1:
         if action[0] in ['pickup', 'take', 'grab']:
-            new_player.pickup(action[1])
-            continue
-        elif action[0] in ['look', 'search', 'find']:
-            new_player.look_for_items()
+            print('')
+            result = new_player.pickup(action[1])
+            if result == False:
+                print(f"> Couldn't pickup {action[1]}")
             continue
         elif action[0] in ['use']:
-            new_player.use_item(action[1])
+            print('')
+            result = new_player.use_item(action[1])
+            if result == True:
+                print("You won! Congratulations!")
+                break
             continue
         else:
+            print('')
             print("> Doesn't look like you can do that...")
 
     else:
+        print('')
         print('> Action not recognized. Try again.')
 
 

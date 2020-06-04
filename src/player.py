@@ -15,16 +15,37 @@ class Player:
 
     def look_for_items(self):
         if len(self.current_room.items) >= 1:
-            for item in self.current_room.items:
-                print(f"> You see a {item.name}")
+            for i in self.current_room.items:
+                print(f"> You see a {i}")
         else:
-            print("> There isn't any items in here")
+            print("> There aren't any items in here")
 
     def pickup(self, item):
-        pass
+        if len(self.current_room.items) >= 1:
+            for i in self.current_room.items:
+                print('> Searching...')
+                if item == i.name:
+                    self.items.append(i)
+                    self.current_room.items.remove(i)
+                    print(f"> You picked up a {i.name}!")
+                    return True
+                else:
+                    return False
+        else:
+            return False
 
     def use_item(self, item):
-        pass
+        item_names = [i.name for i in self.items]
+        if item in item_names:
+            if item == 'dagger' and self.current_room.name == "Treasure Chamber":
+                print(f"> You slash the Vampire with the silver dagger!")
+                print('> The Vampire recoils, and turns to dust!')
+                print('...')
+                return True
+            else:
+                print("> Doesn't seem to have any use...")
+        else:
+            print("> You don't have that item.")
 
     def __str__(self):
         return self.current_room
