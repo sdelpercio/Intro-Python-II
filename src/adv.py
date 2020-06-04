@@ -1,7 +1,8 @@
 from room import Room
 from player import Player
-# Declare all the rooms
+from item import Item
 
+# Declare all the rooms
 room = {
     'outside':  Room("Outside Cave Entrance",
                      "North of you, the cave mount beckons"),
@@ -21,9 +22,7 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
-
 # Link rooms together
-
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
@@ -33,13 +32,30 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# create items
+rusty_sword = Item(
+    "Rusty sword", "rough to the touch, a relic from past eras.")
+mirror = Item("Mirror", "your face reflects as you stare into it.")
+silver_dagger = Item(
+    "Silver dagger", "useful against those without a reflection...")
+rubber_chicken = Item("Rubber chicken", "SQAWWW")
+gold_coin = Item("Gold coin", "from a previous time. Should be worth a lot!")
+
+# Add items to rooms
+room['outside'].items.append(rusty_sword)
+room['foyer'].items.append(rubber_chicken)
+room['foyer'].items.append(mirror)
+room['overlook'].items.append(silver_dagger)
+room['treasure'].items.append(gold_coin)
+
+
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room, declare vars
 new_player = Player(room['outside'])
-blocked = "> Doesn't appear you can move that way..."
+
 
 # Initialize Game
 print("> Welcome to the Room Game. It's totally fun...")
@@ -47,13 +63,14 @@ print("> You are a poor thief searching for gold, find the treasure to win the g
 print('')
 print(
     "> Controls: [n] move north [e] move east [s] move south [w] move west [q] quit game")
+print("> Tip! Try to *look* for items, *pickup* items, or *use* items!")
 print('')
 
 # create loop
 while True:
     # opening statement
     print('')
-    print(new_player.room)
+    print(new_player.current_room)
     print('')
     action = input("What do you want to do?")
 
@@ -63,38 +80,23 @@ while True:
         break
 
     # movement actions
-    elif action == 'n':
-        try:
-            if new_player.room.n_to:
-                new_player.room = new_player.room.n_to
-                continue
-        except AttributeError:
-            print(blocked)
+    elif action in ['n', 'e', 's', 'w']:
+        new_player.move(action)
+        continue
+
+    elif len(action) == 2:
+        if action[0] in ['pickup', 'take', 'grab']:
+            new_player.pickup(action[1])
             continue
-    elif action == 'e':
-        try:
-            if new_player.room.e_to:
-                new_player.room = new_player.room.e_to
-                continue
-        except AttributeError:
-            print(blocked)
+        elif action[0] in ['look', 'search', 'find']:
+            new_player.look_for_items()
             continue
-    elif action == 's':
-        try:
-            if new_player.room.s_to:
-                new_player.room = new_player.room.s_to
-                continue
-        except AttributeError:
-            print(blocked)
+        elif action[0] in ['use']:
+            new_player.use_item(action[1])
             continue
-    elif action == 'w':
-        try:
-            if new_player.room.w_to:
-                new_player.room = new_player.room.w_to
-                continue
-        except AttributeError:
-            print(blocked)
-            continue
+        else:
+            print("> Doesn't look like you can do that...")
+
     else:
         print('> Action not recognized. Try again.')
 
