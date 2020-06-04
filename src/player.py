@@ -29,8 +29,7 @@ class Player:
                     self.current_room.items.remove(i)
                     print(f"> You picked up a {i.name}!")
                     return True
-                else:
-                    return False
+            return False
         else:
             return False
 
